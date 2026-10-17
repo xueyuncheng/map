@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/* An atlas on paper: warm stock, iron-gall ink, a vermilion seal for actions. */
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans CJK SC", sans-serif;
+
+  --color-paper: #f3ede1;
+  --color-paper-50: #fbf8f1;
+  --color-paper-100: #f4eee2;
+  --color-paper-200: #e8dfcd;
+  --color-paper-300: #d6cab3;
+  --color-ink: #2b2620;
+  --color-ink-soft: #5c5348;
+  --color-ink-faint: #756a5d;
+  --color-seal: #b8372b;
+  --color-seal-deep: #9a2b21;
+  /* Destructive actions and errors: darker than the seal so it never reads as "go". */
+  --color-danger: #8c2f39;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-rise: rise 700ms var(--ease-out-expo) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+      filter: blur(6px);
+    }
+  }
+}
+
+@theme inline {
+  /* System CJK serifs: a self-hosted CJK face is ~10 MB of slices. */
+  --font-serif: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
+  --font-numeral: var(--font-fraunces), Georgia, serif;
+}
+
+body {
+  @apply bg-paper font-sans text-ink antialiased;
+  caret-color: var(--color-seal);
+  accent-color: var(--color-seal);
+}
+
+::selection {
+  background: rgb(184 55 43 / 0.18);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline-color: var(--color-seal);
+}
+
+/* Fine fibre grain over the paper colour, for panels that float on the map. */
+@utility paper {
+  background-color: rgb(251 248 241 / 0.96);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .2 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@utility paper-shadow {
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.7) inset,
+    0 0 0 1px rgb(91 72 48 / 0.12),
+    0 2px 4px rgb(60 44 26 / 0.06),
+    0 14px 36px -8px rgb(60 44 26 / 0.22);
+}
+
+/* The vermilion name seal next to the title. */
+.seal {
+  background: var(--color-seal);
+  outline: 1.5px solid rgb(255 255 255 / 0.85);
+  outline-offset: -4px;
+  box-shadow: 0 1px 2px rgb(120 30 20 / 0.35);
+}
+
+/* Popups inherit the app font instead of MapLibre's Helvetica. */
+.maplibregl-popup-content {
+  @apply paper paper-shadow rounded-xl px-2 py-2 font-sans;
+}
+.maplibregl-popup-tip {
+  border-top-color: var(--color-paper-50) !important;
+  border-bottom-color: var(--color-paper-50) !important;
+}
+.maplibregl-popup-close-button {
+  @apply rounded-full text-ink-faint hover:bg-paper-200 hover:text-ink;
+}
+
+/* MapLibre's own stylesheet sets these with equal specificity, so win by !important. */
+.maplibregl-ctrl-group {
+  border-radius: 0.75rem !important;
+  background: var(--color-paper-50) !important;
+  box-shadow:
+    0 0 0 1px rgb(91 72 48 / 0.12),
+    0 6px 16px -4px rgb(60 44 26 / 0.2) !important;
+}
+.maplibregl-ctrl-group button + button {
+  border-top-color: var(--color-paper-200) !important;
+}
+.maplibregl-ctrl-scale {
+  @apply font-numeral;
+  background: rgb(251 248 241 / 0.8) !important;
+  border-color: var(--color-ink-soft) !important;
+  color: var(--color-ink-soft) !important;
+}
+.maplibregl-ctrl-attrib {
+  background: rgb(251 248 241 / 0.8) !important;
+}
+
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-paper-300) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
